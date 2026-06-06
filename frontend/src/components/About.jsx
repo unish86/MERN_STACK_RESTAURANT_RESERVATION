@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-scroll";
 import { HiOutlineArrowRight } from "react-icons/hi";
 
 const About = () => {
@@ -21,7 +21,7 @@ const About = () => {
               iusto ipsum qui dolore ex, accusantium repellat mollitia
               repellendus.
             </p>
-            <Link to={"/"}>
+            <Link to="menu" spy={true} smooth={true} duration={500}>
               Explore Menu{" "}
               <span>
                 <HiOutlineArrowRight />
