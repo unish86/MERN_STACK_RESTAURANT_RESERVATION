@@ -30,9 +30,15 @@ const reservationSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator(value) {
+<<<<<<< HEAD
+          return /^[0-9]{10,15}$/.test(value);
+        },
+        message: "Phone number must be 10 to 15 digits"
+=======
           return validator.isMobilePhone(value, "any", { strictMode: false });
         },
         message: "Please provide a valid phone number"
+>>>>>>> be16480289ad63fec734bebd065047e33fb66a84
       }
     },
     date: {

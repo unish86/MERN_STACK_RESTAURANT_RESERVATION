@@ -1,6 +1,10 @@
 import { Reservation } from "../models/reservation.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
+<<<<<<< HEAD
+import { sendReservationStatusEmail } from "../services/mail.service.js";
+=======
+>>>>>>> be16480289ad63fec734bebd065047e33fb66a84
 
 export const createReservation = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, phone, date, time } = req.body;
@@ -16,10 +20,17 @@ export const createReservation = asyncHandler(async (req, res) => {
   }
 
   const reservation = await Reservation.create({
+<<<<<<< HEAD
+    firstName: firstName.trim(),
+    lastName: lastName.trim(),
+    email: email.trim(),
+    phone: String(phone).trim(),
+=======
     firstName,
     lastName,
     email,
     phone: String(phone),
+>>>>>>> be16480289ad63fec734bebd065047e33fb66a84
     date: reservationDate,
     time
   });
@@ -60,9 +71,29 @@ export const updateReservationStatus = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Reservation not found");
   }
 
+<<<<<<< HEAD
+  let emailSent = false;
+  let emailError = "";
+
+  try {
+    emailSent = await sendReservationStatusEmail(reservation);
+  } catch (error) {
+    emailError = error.message;
+    console.error(`Reservation email failed: ${error.message}`);
+  }
+
+  res.status(200).json({
+    success: true,
+    message: emailSent
+      ? `Reservation ${status} successfully and email sent to customer`
+      : `Reservation ${status} successfully, but email could not be sent`,
+    emailSent,
+    emailError,
+=======
   res.status(200).json({
     success: true,
     message: `Reservation ${status} successfully`,
+>>>>>>> be16480289ad63fec734bebd065047e33fb66a84
     reservation
   });
 });
