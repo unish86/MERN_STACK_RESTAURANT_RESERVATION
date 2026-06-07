@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 
 const Reservation = () => {
   const [firstName, setFirstName] = useState("");
@@ -11,15 +12,24 @@ const Reservation = () => {
   const [email, setEmail] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [phone, setPhone] = useState(0);
+  const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleReservation = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const { data } = await axios.post(
-        "http://localhost:4000/reservation/send",
-        { firstName, lastName, email, phone, date, time },
+        `${API_BASE_URL}/reservation/send`,
+        {
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          date,
+          time,
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -30,13 +40,15 @@ const Reservation = () => {
       toast.success(data.message);
       setFirstName("");
       setLastName("");
-      setPhone(0);
+      setPhone("");
       setEmail("");
       setTime("");
       setDate("");
       navigate("/success");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Reservation failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,18 +62,20 @@ const Reservation = () => {
           <div className="reservation_form_box">
             <h1>MAKE A RESERVATION</h1>
             <p>For Further Questions, Please Call</p>
-            <form>
+            <form onSubmit={handleReservation}>
               <div>
                 <input
                   type="text"
                   placeholder="First Name"
                   value={firstName}
+                  required
                   onChange={(e) => setFirstName(e.target.value)}
                 />
                 <input
                   type="text"
                   placeholder="Last Name"
                   value={lastName}
+                  required
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </div>
@@ -70,12 +84,14 @@ const Reservation = () => {
                   type="date"
                   placeholder="Date"
                   value={date}
+                  required
                   onChange={(e) => setDate(e.target.value)}
                 />
                 <input
                   type="time"
                   placeholder="Time"
                   value={time}
+                  required
                   onChange={(e) => setTime(e.target.value)}
                 />
               </div>
@@ -85,17 +101,22 @@ const Reservation = () => {
                   placeholder="Email"
                   className="email_tag"
                   value={email}
+                  required
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
-                  type="number"
+                  type="tel"
                   placeholder="Phone"
                   value={phone}
+                  required
+                  minLength="10"
+                  maxLength="15"
+                  pattern="[0-9]{10,15}"
                   onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
-              <button type="submit" onClick={handleReservation}>
-                RESERVE NOW{" "}
+              <button type="submit" disabled={loading}>
+                {loading ? "RESERVING..." : "RESERVE NOW"}{" "}
                 <span>
                   <HiOutlineArrowNarrowRight />
                 </span>

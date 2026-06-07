@@ -4,6 +4,8 @@ import { Toaster } from 'react-hot-toast';
 import Home from './Pages/Home/Home';
 import NotFound from './Pages/NotFound/NotFound';
 import Success from './Pages/Success/Success';
+import Admin from './Pages/Admin/Admin';
+import AdminLogin from './Pages/AdminLogin/AdminLogin';
 import './App.css'
 const App = () => {
   return (
@@ -12,6 +14,8 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='/success' element={<Success/>}/>
+          <Route path='/admin/login' element={<AdminLogin/>}/>
+          <Route path='/admin' element={<Admin/>}/>
           <Route path='*' element={<NotFound/>}/>
         </Routes>
         <Toaster/>
